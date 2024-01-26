@@ -1,7 +1,7 @@
 import pygame
-from Gameoflife import dimensions, env
+import Gameoflife as gf 
 
-screen_w, screen_h = dimensions
+screen_w, screen_h = gf.dimensions
 # setting pygame up
 pygame.init() 
 screen = pygame.display.set_mode((screen_w, screen_h))
@@ -39,6 +39,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    gf.GameLoop()
     visualizeGrid()
     pygame.display.flip()
     clock.tick(60) # FPS is limited to 60
