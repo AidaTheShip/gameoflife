@@ -1,6 +1,7 @@
 import math
 import numpy as np
-#import pygames
+import pygame
+import random
 
 # What is the game of life?
 """"
@@ -25,16 +26,32 @@ Here's major things we need to consider:
 
 """
 # These are the dimensions of the environment we want to look at
-dimensions = (1080, 1080)
+dimensions = (700, 700)
+grid_rows, grid_cols = dimensions
 
 # Create the environment
-env = np.zeros(dimensions) # our environment will not have any life in there for now.
+def random_matrix(rows, cols, num_ones):
+    env = np.zeros((rows, cols), dtype=int)
+    ones_positions = random.sample(range(rows * cols), num_ones)
+    for pos in ones_positions:
+        env[pos // cols, pos % cols] = 1
+    return env
 
-# Do I need a score actually? Not entirely sure... I just need to be able to check the neighbors.
-# env[5,4] = 1
-# env[5,5] = 1
+# env = random_matrix(grid_rows, grid_cols, 500)  # 500 is the number of initial live cells
+
+
+env = np.array([[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],
+                        [1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
+
 # Going from a cell i, this is all the directions you would have to go to scan the neighboring cells
-directions = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (-1,1), (1,0), (1,1)]
+directions = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (1,-1), (1,0), (1,1)]
 
 # Implementing the rules
 def scan_neighbor(cells, i, j):
@@ -43,7 +60,7 @@ def scan_neighbor(cells, i, j):
     
     score = 0 # this is the score for each cell at the beginning
     for x,y in directions: # looping through each of these directions
-        if 0 < (i+x) < num_rows-1 and 0 < (j+y) < num_col-1: 
+        if 0 <= (i+x) < num_rows and 0 <= (j+y) < num_col: 
             score += cells[i + x][j + y] 
         
     return score
@@ -54,15 +71,64 @@ def next_state(cell, score):
         if score < 2 or score > 3:
             cell = 0
     else:
-        if cell == 3:
+        if score == 3:
             cell = 1
+    return cell
 
 
 # Overall logic - gameloop to be called
-def Gameloop():
+def Gameloop(env):
+    new_env = np.copy(env)  # Create a copy of the current environment
     for i in range(len(env)):
         for j in range(len(env[0])):
-            scan_neighbor(env, i, j)
-            next_state(env)
-    
+            score = scan_neighbor(env, i, j)
+            new_env[i][j] = next_state(env[i][j], score)
+    return new_env
 
+
+# THIS IS JUST HERE FOR TRAINING PURPOSES. 
+# screen_w, screen_h = dimensions
+# # setting pygame up
+# pygame.init() 
+# screen = pygame.display.set_mode((screen_w, screen_h))
+# clock = pygame.time.Clock()
+# running = True
+
+# matrix = [[1 ,0 ,0 ,0],
+#           [0 ,0 ,0 ,0],
+#           [1 ,0 ,0 ,0],
+#           [1 ,0 ,1 ,0]]
+# grid_node_width = grid_node_height = 10
+
+# steps = 5
+# # Creating a grid display
+# def createSquare(x, y, color):
+#     pygame.draw.rect(screen, color, [x,y, grid_node_width, grid_node_height])
+    
+# def visualizeGrid(matrix):
+#     y = 0 # starting from the top of the screen
+#     for row in matrix: 
+#         x = 0 # starting at the left of the screen
+#         for col in row:
+#             if col == 0: # if dead, then we have a black square
+#                 createSquare(x,y,(0,0,0))
+#             else: 
+#                 createSquare(x,y,(255,255,255)) # if alive, then the square will be white
+#             x += grid_node_width
+#         y += grid_node_height
+#     pygame.display.update()
+
+# while running:
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             running = False
+
+#     screen.fill((0, 0, 0))  # Clear screen
+#     visualizeGrid(env)  # Draw the current state of the grid
+#     pygame.display.flip()  # Update the full display
+
+#     env = Gameloop(env)  # Update the environment for the next state
+
+#     clock.tick(60)  # Control the speed of updates
+
+# pygame.quit()
