@@ -30,24 +30,7 @@ dimensions = (700, 700)
 grid_rows, grid_cols = dimensions
 
 # Create the environment
-# def random_matrix(rows, cols, num_ones):
-#     env = np.zeros((rows, cols), dtype=int)
-#     ones = np.eye()
-
-
-# env = random_matrix(grid_rows, grid_cols, 500)  # 500 is the number of initial live cells
 env = np.random.randint(0, 2, (500,500))
-
-
-# env = np.array([[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-#                         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-#                         [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],
-#                         [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],
-#                         [1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-#                         [1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-#                         [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-#                         [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-#                         [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
 
 # Going from a cell i, this is all the directions you would have to go to scan the neighboring cells
 directions = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (1,-1), (1,0), (1,1)]
@@ -83,51 +66,3 @@ def Gameloop(env):
             score = scan_neighbor(env, i, j)
             new_env[i][j] = next_state(env[i][j], score)
     return new_env
-
-
-# THIS IS JUST HERE FOR TRAINING PURPOSES. 
-# screen_w, screen_h = dimensions
-# # setting pygame up
-# pygame.init() 
-# screen = pygame.display.set_mode((screen_w, screen_h))
-# clock = pygame.time.Clock()
-# running = True
-
-# matrix = [[1 ,0 ,0 ,0],
-#           [0 ,0 ,0 ,0],
-#           [1 ,0 ,0 ,0],
-#           [1 ,0 ,1 ,0]]
-# grid_node_width = grid_node_height = 10
-
-# steps = 5
-# # Creating a grid display
-# def createSquare(x, y, color):
-#     pygame.draw.rect(screen, color, [x,y, grid_node_width, grid_node_height])
-    
-# def visualizeGrid(matrix):
-#     y = 0 # starting from the top of the screen
-#     for row in matrix: 
-#         x = 0 # starting at the left of the screen
-#         for col in row:
-#             if col == 0: # if dead, then we have a black square
-#                 createSquare(x,y,(0,0,0))
-#             else: 
-#                 createSquare(x,y,(255,255,255)) # if alive, then the square will be white
-#             x += grid_node_width
-#         y += grid_node_height
-#     pygame.display.update()
-
-# while running:
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             running = False
-
-#     screen.fill((0, 0, 0))  # Clear screen
-#     visualizeGrid(env)  # Draw the current state of the grid
-#     pygame.display.flip()  # Update the full display
-
-#     env = Gameloop(env)  # Update the environment for the next state
-
-#     clock.tick(60)  # Control the speed of updates
-
-# pygame.quit()
