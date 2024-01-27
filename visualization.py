@@ -7,11 +7,6 @@ pygame.init()
 screen = pygame.display.set_mode((screen_w, screen_h))
 clock = pygame.time.Clock()
 running = True
-
-# matrix = [[1 ,0 ,0 ,0],
-#           [0 ,0 ,0 ,0],
-#           [1 ,0 ,0 ,0],
-#           [1 ,0 ,1 ,0]]
 grid_node_width = grid_node_height = 10
 
 steps = 4
